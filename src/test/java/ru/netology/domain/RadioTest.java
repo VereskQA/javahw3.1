@@ -3,15 +3,13 @@ package ru.netology.domain;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvFileSource;
 
 class RadioTest {
-    Radio radio = new Radio();
 
     @Test
     public void shouldNotSetVolumeAboveMax() {
-        radio.setMaxVolume();
+        Radio radio = new Radio();
+        radio.increaseToMaxVolume();
         int prevVolume = radio.getCurrentVolume();
         radio.increaseVolume();
         assertEquals(prevVolume, radio.getCurrentVolume());
@@ -19,7 +17,8 @@ class RadioTest {
 
     @Test
     public void shouldNotSetVolumeBelowMin() {
-        radio.setMinVolume();
+        Radio radio = new Radio();
+        radio.decreaseToMinVolume();
         int prevVolume = radio.getCurrentVolume();
         radio.decreaseVolume();
         assertEquals(prevVolume, radio.getCurrentVolume());
@@ -27,7 +26,8 @@ class RadioTest {
 
     @Test
     public void shouldIncreaseVolume() {
-        radio.setMinVolume();
+        Radio radio = new Radio();
+        radio.decreaseToMinVolume();
         int expected = radio.getCurrentVolume();
         radio.increaseVolume();
         assertEquals(expected + 1, radio.getCurrentVolume());
@@ -36,7 +36,8 @@ class RadioTest {
 
     @Test
     public void shouldDecreaseVolume() {
-        radio.setMaxVolume();
+        Radio radio = new Radio();
+        radio.increaseToMaxVolume();
         int expected = radio.getCurrentVolume();
         radio.decreaseVolume();
         assertEquals(expected - 1, radio.getCurrentVolume());
@@ -45,7 +46,8 @@ class RadioTest {
 
     @Test
     public void shouldSetNextStation() {
-        radio.setCurrentStation(1);
+        Radio radio = new Radio();
+        radio.setCurrentStation(0);
         int expected = radio.getCurrentStation();
         radio.nextStation();
         assertEquals(expected + 1, radio.getCurrentStation());
@@ -53,30 +55,50 @@ class RadioTest {
 
     @Test
     public void shouldLoopNextStation() {
-        radio.setCurrentStation(9);
+        Radio radio = new Radio(0, 12, 100, 0, 0, 0);
+        int lastStation = radio.getLastStation();
+        radio.setCurrentStation(lastStation);
         radio.nextStation();
-        assertEquals(0, radio.getCurrentStation());
+        assertEquals(radio.getFirstStation(), radio.getCurrentStation());
     }
 
     @Test
     public void shouldLoopPrevStation() {
+        Radio radio = new Radio();
         radio.setCurrentStation(0);
         radio.prevStation();
-        assertEquals(9, radio.getCurrentStation());
+        assertEquals(radio.getLastStation(), radio.getCurrentStation());
     }
 
     @Test
     public void shouldSetPrevStation() {
-        radio.setCurrentStation(8);
+        Radio radio = new Radio();
+        radio.setCurrentStation(2);
         int expected = radio.getCurrentStation();
         radio.prevStation();
         assertEquals(expected - 1, radio.getCurrentStation());
     }
 
-    @ParameterizedTest
-    @CsvFileSource(resources = "allowedStations.csv")
-    public void shouldSetAllowedStation(int setStation, int expected) {
-        radio.setCurrentStation(setStation);
+    @Test
+    public void shouldSetAllowedStation() {
+        Radio radio = new Radio();
+        radio.setCurrentStation(2);
+        assertEquals(2, radio.getCurrentStation());
+    }
+
+    @Test
+    public void shouldNotSetStationOverMax() {
+        Radio radio = new Radio(0, 12, 100, 0, 0, 0);
+        int expected = radio.getCurrentStation();
+        radio.setCurrentStation(13);
+        assertEquals(expected, radio.getCurrentStation());
+    }
+
+    @Test
+    public void shouldNotSetStationBelowMin() {
+        Radio radio = new Radio();
+        int expected = radio.getCurrentStation();
+        radio.setCurrentStation(-1);
         assertEquals(expected, radio.getCurrentStation());
     }
 }

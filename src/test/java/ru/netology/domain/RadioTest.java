@@ -9,7 +9,7 @@ class RadioTest {
     @Test
     public void shouldNotSetVolumeAboveMax() {
         Radio radio = new Radio();
-        radio.setMaxVolume();
+        radio.increaseToMaxVolume();
         int prevVolume = radio.getCurrentVolume();
         radio.increaseVolume();
         assertEquals(prevVolume, radio.getCurrentVolume());
@@ -18,7 +18,7 @@ class RadioTest {
     @Test
     public void shouldNotSetVolumeBelowMin() {
         Radio radio = new Radio();
-        radio.setMinVolume();
+        radio.decreaseToMinVolume();
         int prevVolume = radio.getCurrentVolume();
         radio.decreaseVolume();
         assertEquals(prevVolume, radio.getCurrentVolume());
@@ -27,7 +27,7 @@ class RadioTest {
     @Test
     public void shouldIncreaseVolume() {
         Radio radio = new Radio();
-        radio.setMinVolume();
+        radio.decreaseToMinVolume();
         int expected = radio.getCurrentVolume();
         radio.increaseVolume();
         assertEquals(expected + 1, radio.getCurrentVolume());
@@ -37,7 +37,7 @@ class RadioTest {
     @Test
     public void shouldDecreaseVolume() {
         Radio radio = new Radio();
-        radio.setMaxVolume();
+        radio.increaseToMaxVolume();
         int expected = radio.getCurrentVolume();
         radio.decreaseVolume();
         assertEquals(expected - 1, radio.getCurrentVolume());
@@ -55,7 +55,7 @@ class RadioTest {
 
     @Test
     public void shouldLoopNextStation() {
-        Radio radio = new Radio (12);
+        Radio radio = new Radio(0, 12, 100, 0, 0, 0);
         int lastStation = radio.getLastStation();
         radio.setCurrentStation(lastStation);
         radio.nextStation();
@@ -88,7 +88,7 @@ class RadioTest {
 
     @Test
     public void shouldNotSetStationOverMax() {
-        Radio radio = new Radio(12);
+        Radio radio = new Radio(0, 12, 100, 0, 0, 0);
         int expected = radio.getCurrentStation();
         radio.setCurrentStation(13);
         assertEquals(expected, radio.getCurrentStation());

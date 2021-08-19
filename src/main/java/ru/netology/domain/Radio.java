@@ -9,8 +9,8 @@ public class Radio {
     private int currentStation = firstStation;
     private int currentVolume = 0;
 
-    public Radio (int lastStation){
-        this.lastStation = lastStation;
+    public Radio (int numberOfStations){
+        this.lastStation = numberOfStations -  1;
     }
 
     public Radio() {
